@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.SignalR.Client;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -22,11 +24,13 @@ namespace ChatCLient
     public partial class MainWindow : Window
     {
         HubConnection hubConnection;
+        private readonly HttpClient _client = new HttpClient();
+        public string BaseURI => (_client.BaseAddress= new Uri("http://localhost:55437/chat-hub")).ToString();
         public MainWindow()
         {
             InitializeComponent();
 
-            var hubAddress = "http://localhost:44341/chat-hub";
+            var hubAddress = "http://localhost:55437/chat";
             hubConnection = new HubConnectionBuilder()
                 .WithUrl(hubAddress)
                 .WithAutomaticReconnect()
@@ -68,6 +72,15 @@ namespace ChatCLient
                 return Task.CompletedTask;
             };
         }
+        //public async Task PostAsync(string uri, string item) 
+        //{
+        //    var stringyfiedItem = JsonConvert.SerializeObject(item);
+        //    StringContent data = new StringContent(stringyfiedItem, Encoding.UTF8, "application/json");
+        //    HttpResponseMessage response = await _client.PostAsync(uri, data);
+        //    string jsonResponse = await response.Content.ReadAsStringAsync();
+        //    var result = JsonConvert.DeserializeObject(jsonResponse);
+        //    messages.Items.Add(result);
+        //}
 
         private async void openConnection_Click(object sender, RoutedEventArgs e)
         {
@@ -98,9 +111,13 @@ namespace ChatCLient
         {
             try
             {
-                var user = "WPF Client";
-                var message = messageInput.Text;
+                var user = nameInput.Text;
+                var message = inputMessage.Text;
                 await hubConnection.InvokeAsync(methodName: "SendMessage", user, message);
+                nameInput.IsEnabled = false;
+
+                inputMessage.Clear();
+                //await PostAsync(BaseURI+ "/send-to-all", message);
             }
             catch (Exception ex)
             {

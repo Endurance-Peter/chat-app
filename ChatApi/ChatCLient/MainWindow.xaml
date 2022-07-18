@@ -18,16 +18,20 @@
         <Button x:Name="openConnection" HorizontalAlignment="Center" Padding="20,10" Margin="20" Grid.Row="0" Click="openConnection_Click">
             Open Connection
         </Button>
-        <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Center">
-            <TextBlock x:Name="messageInput" Margin="20" MinWidth="300" Padding="10" >
+        <TextBox x:Name="nameInput" Margin="20" Width="300" Padding="4" Grid.Row="1">
+            enter your user name
+        </TextBox>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Center">
+            <TextBox x:Name="inputMessage" Margin="20" MinWidth="300" Padding="10" >
                 send message
-            </TextBlock>
+            </TextBox>
             <Button x:Name="sendMessage"  Padding="20,10" Margin="20" IsEnabled="False" Click="sendMessage_Click">
                 Send Message
             </Button>
            
         </StackPanel>
-        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" MaxHeight="200" Margin="20">
+        <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Auto" MaxHeight="200" Margin="20">
             <ListBox x:Name="messages" Padding="20,10" BorderThickness="0" HorizontalAlignment="Stretch"/>
         </ScrollViewer>
     </Grid>
