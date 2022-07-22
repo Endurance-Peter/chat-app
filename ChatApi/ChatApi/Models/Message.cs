@@ -11,7 +11,8 @@ namespace ChatApi.Models
         public string MessageText { get; set; }
         public DateTime Time => DateTime.UtcNow;
 
-        public Guid UserId { get; set; }
+        public Guid SenderUserId { get; set; }
+        public string ReceiverUserName { get; set; }
         public User AppUser { get; set; }
     }
 }

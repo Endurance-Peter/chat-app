@@ -23,7 +23,7 @@ namespace ChatApi.Data
             builder.Entity<Message>()
                 .HasOne(x => x.AppUser)
                 .WithMany(x => x.Messages)
-                .HasForeignKey(x => x.UserId);
+                .HasForeignKey(x => x.SenderUserId);
         }
     }
 }

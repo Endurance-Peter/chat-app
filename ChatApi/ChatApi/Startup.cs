@@ -34,6 +34,7 @@ namespace ChatApi
             //        options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             //services.AddDefaultIdentity<IdentityUser>();
+            services.AddTransient<IChatHubConnection, ChatHub>();
             services.AddSignalR();
             services.AddControllers();
 

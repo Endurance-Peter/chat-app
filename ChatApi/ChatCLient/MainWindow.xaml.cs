@@ -72,16 +72,14 @@ namespace ChatCLient
                 return Task.CompletedTask;
             };
         }
-        //public async Task PostAsync(string uri, string item) 
-        //{
-        //    var stringyfiedItem = JsonConvert.SerializeObject(item);
-        //    StringContent data = new StringContent(stringyfiedItem, Encoding.UTF8, "application/json");
-        //    HttpResponseMessage response = await _client.PostAsync(uri, data);
-        //    string jsonResponse = await response.Content.ReadAsStringAsync();
-        //    var result = JsonConvert.DeserializeObject(jsonResponse);
-        //    messages.Items.Add(result);
-        //}
-
+        public async Task PostAsync(string uri, string item)
+        {
+            var stringyfiedItem = JsonConvert.SerializeObject(item);
+            StringContent data = new StringContent(stringyfiedItem, Encoding.UTF8, "application/json");
+            HttpResponseMessage response = await _client.PostAsync(uri, data);
+            
+        }
+        private string receiverId;
         private async void openConnection_Click(object sender, RoutedEventArgs e)
         {
             hubConnection.On<string, string>(methodName: "ReceiveMessage", (user, message) =>
@@ -93,12 +91,40 @@ namespace ChatCLient
                  });
              });
 
+            hubConnection.On<string, string>(methodName: "ReceiveMessageToUser", (user, message) =>
+            {
+                this.Dispatcher.Invoke(() =>
+                {
+                    var reconnectingMessage = $"{user} : {message}";
+                    messages.Items.Add(reconnectingMessage);
+                });
+            });
+
+            hubConnection.On<string>(methodName: "UserConnected", (connectedId) =>
+            {
+                this.Dispatcher.Invoke(() =>
+                {
+                   
+                    //var user = nameInput.Text;
+                    messages.Items.Add($"{connectedId}");
+                });
+            });
+
+            hubConnection.On<string, string>(methodName: "ReceiveMessageFromGroup", (user, message) =>
+            {
+                this.Dispatcher.Invoke(() =>
+                {
+                    messages.Items.Add($"{user} : {message}");
+                });
+            });
+
             try
             {
                 await hubConnection.StartAsync();
                 messages.Items.Add("Connection started");
                 openConnection.IsEnabled = false;
                 sendMessage.IsEnabled = true;
+                //connectionId.Text = GetConnectionId();
             }
             catch (Exception ex)
             {
@@ -113,17 +139,49 @@ namespace ChatCLient
             {
                 var user = nameInput.Text;
                 var message = inputMessage.Text;
-                await hubConnection.InvokeAsync(methodName: "SendMessage", user, message);
+                var groupname = groupName.Text;
+                //await PostAsync(BaseURI + "/send-to-all", message);
+                //await hubConnection.InvokeAsync(methodName: "SendMessageToGroup", user, message);
+                await hubConnection.InvokeAsync(methodName: "SendMessageToGroup", groupname, user, message);
                 nameInput.IsEnabled = false;
 
                 inputMessage.Clear();
-                //await PostAsync(BaseURI+ "/send-to-all", message);
+                
             }
             catch (Exception ex)
             {
 
                 messages.Items.Add(ex.Message);
             }
+        }
+        private async void SendMessageToClient(string user, string receiver)
+        {
+            var message = inputMessage.Text;
+            await hubConnection.InvokeAsync(methodName: "SendMessageToUser",receiver, user, message);
+        }
+
+        private void sendToCLeint_Click(object sender, RoutedEventArgs e)
+        {
+            var user = nameInput.Text;
+            var cleintConnectedId = cleintId.Text;
+            SendMessageToClient(user, cleintConnectedId);
+        }
+
+        //private async void GetConnectionId()
+        //{
+        //    await hubConnection.InvokeAsync(methodName: "GetConnectionId");
+        //}
+
+        private async void connectToCLeint_Click(object sender, RoutedEventArgs e)
+        {
+            var connectedId = await hubConnection.InvokeAsync<string>(methodName: "GetConnectionId");
+            connectionId.Text = (connectedId);
+        }
+
+        private async void joinGroup_Click(object sender, RoutedEventArgs e)
+        {
+            var groupName1 = groupName.Text;
+            await hubConnection.InvokeAsync(methodName: "JoinGroup", groupName1);
         }
     }
 }

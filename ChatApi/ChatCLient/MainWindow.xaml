@@ -5,9 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ChatCLient"
         mc:Ignorable="d" FontSize="18"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="500">
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
@@ -15,14 +16,28 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Button x:Name="openConnection" HorizontalAlignment="Center" Padding="20,10" Margin="20" Grid.Row="0" Click="openConnection_Click">
+        <Button x:Name="openConnection" HorizontalAlignment="Right" Padding="20,10" Margin="20" Grid.Row="0" Click="openConnection_Click">
             Open Connection
         </Button>
-        <TextBox x:Name="nameInput" Margin="20" Width="300" Padding="4" Grid.Row="1">
+        <Button x:Name="sendToCLeint" HorizontalAlignment="Right" Padding="20,10" Margin="20" Grid.Row="4" Click="sendToCLeint_Click">
+            Send to Cleint
+        </Button>
+        <TextBox x:Name="nameInput" Margin="20" Width="200" Padding="4" Grid.Row="0" >
             enter your user name
         </TextBox>
-
-        <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Center">
+        <TextBox x:Name="groupName" Margin="20" Width="200" Padding="4" Grid.Row="1" >
+            enter group
+        </TextBox>
+        <Button x:Name="joinGroup" HorizontalAlignment="Right" Padding="20,10" Margin="20" Grid.Row="1" Click="joinGroup_Click">
+            Join Group
+        </Button>
+        <TextBox x:Name="connectionId" Margin="20" Width="300" Padding="10"  Grid.Row="2">
+           
+        </TextBox>
+        <Button x:Name="connectToCLeint" HorizontalAlignment="Right" Padding="20,10" Margin="20" Grid.Row="2" Click="connectToCLeint_Click" >
+            Get Connection
+        </Button>
+        <StackPanel Orientation="Horizontal" Grid.Row="3" HorizontalAlignment="Center">
             <TextBox x:Name="inputMessage" Margin="20" MinWidth="300" Padding="10" >
                 send message
             </TextBox>
@@ -31,7 +46,10 @@
             </Button>
            
         </StackPanel>
-        <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Auto" MaxHeight="200" Margin="20">
+        <TextBox x:Name="cleintId" Margin="20" Width="200" Padding="10"  Grid.Row="4">
+            cleint id
+        </TextBox>
+        <ScrollViewer Grid.Row="5" VerticalScrollBarVisibility="Auto" MaxHeight="200" Margin="20">
             <ListBox x:Name="messages" Padding="20,10" BorderThickness="0" HorizontalAlignment="Stretch"/>
         </ScrollViewer>
     </Grid>
